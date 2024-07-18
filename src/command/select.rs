@@ -14,7 +14,7 @@ where
             let (beg, end) = content.sel().unwrap();
 
             let selection: String = content.iter().skip(beg).take(end - beg + 1).collect();
-            let mut ctx = ClipboardContext::new().unwrap();
+            let ctx = ClipboardContext::new().unwrap();
             ctx.set_contents(selection).unwrap();
 
             content.reset_sel();
@@ -24,7 +24,7 @@ where
             let (beg, end) = content.sel().unwrap();
 
             let selection: String = content.iter().skip(beg).take(end - beg + 1).collect();
-            let mut ctx = ClipboardContext::new().unwrap();
+            let ctx = ClipboardContext::new().unwrap();
             ctx.set_contents(selection).unwrap();
 
             delete_sel(content);
