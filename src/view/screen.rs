@@ -1,20 +1,20 @@
 use std;
 use std::cell::RefCell;
 use std::io;
-use std::io::{BufWriter, Write};
+use std::io::{Write,BufWriter};
 
 use unicode_width::UnicodeWidthStr;
 use unicode_segmentation::UnicodeSegmentation;
 use termion;
-use termion::screen::AlternateScreen;
+use termion::screen::{AlternateScreen, IntoAlternateScreen};
 use termion::input::MouseTerminal;
 use termion::color;
 use termion::color::Color;
 use termion::style;
-use termion::raw::{IntoRawMode, RawTerminal};
+use termion::raw::{RawTerminal, IntoRawMode};
 
 pub struct Screen {
-    out: RefCell<MouseTerminal<AlternateScreen<RawTerminal<BufWriter<io::Stdout>>>>>,
+    out: RefCell<MouseTerminal<AlternateScreen<RawTerminal<io::Stdout>>>>,
     buf: RefCell<Vec<Option<(Style, String)>>>,
     w: usize,
     h: usize,
@@ -28,11 +28,10 @@ impl Screen {
             .take(w as usize * h as usize)
             .collect();
         Screen {
-            out: RefCell::new(MouseTerminal::from(AlternateScreen::from(
-                BufWriter::with_capacity(1 << 14, io::stdout())
-                    .into_raw_mode()
-                    .unwrap(),
-            ))),
+            out: RefCell::new(MouseTerminal::from(
+                         io::stdout().into_raw_mode().unwrap().
+                         into_alternate_screen().unwrap()
+            )),
             buf: RefCell::new(buf),
             w: w as usize,
             h: h as usize,
